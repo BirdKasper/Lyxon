@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LYXON</title>
+
+  <!-- Ampher Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Amita&family=Amiko&family=Amphion&display=swap" rel="stylesheet">
+  <!-- Remix Icons for social logos -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --dark-bg: #000000;
+      --light-bg: #ffffff;
+      --bright-blue: #0066ff;
+      --teal-accent: #008B8B;
+      --icon-color: rgba(0, 0, 0, 0.8);
+      --icon-color-dark: rgba(255,255,255,0.9);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--light-bg);
+      color: #000;
+      font-family: 'Amiko', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: column;
+      padding-top: 80px;
+    }
+
+    body.dark {
+      background-color: var(--dark-bg);
+      color: #fff;
+    }
+
+    .toggle-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+
+    .toggle-switch {
+      width: 60px;
+      height: 30px;
+      background-color: #ddd;
+      border-radius: 50px;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+    }
+
+    .toggle-switch::before {
+      content: '';
+      width: 24px;
+      height: 24px;
+      background-color: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    body.dark .toggle-switch {
+      background-color: #444;
+    }
+
+    body.dark .toggle-switch::before {
+      transform: translateX(30px);
+      background-color: var(--bright-blue);
+    }
+
+    .toggle-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .icon-sun { left: 8px; }
+    .icon-moon { right: 8px; }
+
+    .watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Ampher', sans-serif;
+      color: var(--bright-blue);
+      opacity: 0.15;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+      text-align: center;
+      width: 100%;
+      font-size: 10vw;
+      line-height: 1;
+      font-weight: bold;
+      letter-spacing: 1px;
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
+      50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.25; }
+    }
+
+    .page-header {
+      font-size: 2.8rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.2;
+    }
+
+    .page-header .lyxon {
+      color: var(--teal-accent);
+      font-family: 'Ampher', sans-serif;
+      font-size: 3.2rem;
+    }
+
+    .glass-panel {
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+      padding: 30px 20px;
+      border: 2px solid var(--teal-accent);
+      border-radius: 25px;
+      background-color: transparent;
+      z-index: 2;
+      box-shadow: 0 0 20px 2px var(--teal-accent);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, select {
+      padding: 12px 16px;
+      border: 1px solid var(--teal-accent);
+      border-radius: 12px;
+      font-size: 1rem;
+      background: transparent;
+      color: inherit;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    input::placeholder,
+    select:invalid {
+      color: #999;
+    }
+
+    input:focus,
+    select:focus {
+      box-shadow: 0 0 8px var(--teal-accent);
+    }
+
+    button {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--teal-accent);
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      background-color: var(--bright-blue);
+    }
+
+    /* Social Icons */
+    .socials {
+      position: fixed;
+      z-index: 10;
+      display: flex;
+      gap: 15px;
+    }
+
+    .socials a {
+      font-size: 2rem;
+      color: var(--teal-accent);
+      transition: transform 0.3s ease, color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .socials a:hover {
+      transform: scale(1.2) rotate(-5deg);
+      color: var(--bright-blue);
+      animation: wiggle 0.5s ease-in-out;
+    }
+
+    @keyframes wiggle {
+      0% { transform: scale(1) rotate(0); }
+      25% { transform: scale(1.1) rotate(-5deg); }
+      50% { transform: scale(1.15) rotate(5deg); }
+      75% { transform: scale(1.1) rotate(-5deg); }
+      100% { transform: scale(1.2) rotate(0); }
+    }
+
+    .socials.desktop {
+      right: 20px;
+      bottom: 20px;
+      flex-direction: column;
+    }
+
+    .socials.mobile {
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      flex-direction: row;
+    }
+
+    @media (max-width: 600px) {
+      .socials.desktop {
+        display: none;
+      }
+
+      .socials.mobile {
+        display: flex;
+      }
+
+      .watermark { font-size: 16vw; }
+    }
+
+    @media (min-width: 601px) {
+      .socials.mobile {
+        display: none;
+      }
+
+      .socials.desktop {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <div class="toggle-container" onclick="toggleTheme()">
+    <div class="toggle-switch">
+      <span class="toggle-icon icon-sun">☀️</span>
+      <span class="toggle-icon icon-moon">🌙</span>
+    </div>
+  </div>
+
+  <!-- Watermark -->
+  <div class="watermark">LYXON</div>
+
+  <!-- Header -->
+  <div class="page-header">
+    MEET <span class="lyxon">LYXON</span><br> THE AI TUTOR CHANGING EVERYTHING
+  </div>
+
+  <!-- Panel -->
+  <div class="glass-panel">
+    <p style="text-align:center; font-size:1.1rem; margin-bottom: 20px; font-weight: 500;">
+      Whether you're a <strong>learner</strong> looking to level up, or a <strong>teacher</strong> seeking the perfect assistant — <span class="lyxon">LYXON</span> is the intelligent tutor you've been waiting for.
+      <br><br>
+      🚀 <strong>Launching soon.</strong> Be the first to get access, updates & exclusive features.
+    </p>
+
+    <form action="https://formsubmit.co/bird.kasper.official@hotmail.com" method="POST">
+      <input type="text" name="name" placeholder="First Name" required>
+      <input type="text" name="surname" placeholder="Surname" required>
+      <input type="number" name="age" placeholder="Age" min="1" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <select name="role" required>
+        <option value="" disabled selected>Are you a student or teacher?</option>
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select>
+      <button type="submit">Get Early Access</button>
+    </form>
+  </div>
+
+  <!-- Social Icons Desktop -->
+  <div class="socials desktop">
+    <a href="https://discord.gg/VF6Ed6YBBV" target="_blank"><i class="ri-discord-fill"></i></a>
+    <a href="https://www.youtube.com/@LyxonAI" target="_blank"><i class="ri-youtube-fill"></i></a>
+    <a href="https://instagram.com/lyxon.ai.official" target="_blank"><i class="ri-instagram-fill"></i></a>
+    <a href="https://tiktok.com/@lyxon.ai.official" target="_blank"><i class="ri-tiktok-fill"></i></a>
+  </div>
+
+  <!-- Social Icons Mobile -->
+  <div class="socials mobile">
+    <a href="https://discord.gg/VF6Ed6YBBV" target="_blank"><i class="ri-discord-fill"></i></a>
+    <a href="https://www.youtube.com/@LyxonAI" target="_blank"><i class="ri-youtube-fill"></i></a>
+    <a href="https://instagram.com/lyxon.ai.official" target="_blank"><i class="ri-instagram-fill"></i></a>
+    <a href="https://tiktok.com/@lyxon.ai.official" target="_blank"><i class="ri-tiktok-fill"></i></a>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
+</body>
+</html>
